@@ -4,42 +4,41 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nikita - Book Recommendation Chatbot</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      display: flex;
-      justify-content: center;
-      align-items: center;
       min-height: 100vh;
-      padding: 20px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
-    .chatbot-container {
-      width: 100%;
-      max-width: 450px;
+    .main-container {
+      min-height: 100vh;
+    }
+
+    .welcome-section {
       background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(10px);
       border-radius: 20px;
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      height: 600px;
+      margin: 20px 0;
+    }
+
+    .chatbot-section {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      margin: 20px 0;
+      min-height: calc(100vh - 40px);
     }
 
     .chat-header {
       background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-      padding: 20px;
-      text-align: center;
       color: white;
+      border-radius: 20px 20px 0 0;
       position: relative;
+      overflow: hidden;
     }
 
     .chat-header::before {
@@ -54,108 +53,81 @@
     }
 
     .bot-avatar {
-      width: 60px;
-      height: 60px;
+      width: 80px;
+      height: 80px;
       background: rgba(255, 255, 255, 0.2);
       border-radius: 50%;
-      margin: 0 auto 15px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 24px;
+      font-size: 32px;
       position: relative;
       z-index: 1;
     }
 
-    .chat-title {
-      font-size: 24px;
-      font-weight: 600;
-      margin-bottom: 5px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .chat-subtitle {
-      font-size: 14px;
-      opacity: 0.9;
-      position: relative;
-      z-index: 1;
-    }
-
-    .welcome-message {
-      padding: 20px;
-      background: rgba(76, 175, 80, 0.1);
-      border-left: 4px solid #4caf50;
-      margin: 15px;
-      border-radius: 10px;
-      animation: slideIn 0.5s ease-out;
-    }
-
-    .welcome-text {
-      color: #2e7d32;
-      font-size: 15px;
-      line-height: 1.5;
-    }
-
-    .chat-content {
-      flex: 1;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-    }
-
-    .features {
-      display: grid;
-      gap: 15px;
-      margin-top: 20px;
-    }
-
-    .feature-item {
-      display: flex;
-      align-items: center;
-      padding: 15px;
+    .feature-card {
       background: rgba(103, 126, 234, 0.1);
-      border-radius: 12px;
-      transition: transform 0.2s ease;
+      border: none;
+      border-radius: 15px;
+      transition: all 0.3s ease;
+      height: 100%;
     }
 
-    .feature-item:hover {
-      transform: translateY(-2px);
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     }
 
     .feature-icon {
-      width: 40px;
-      height: 40px;
+      width: 60px;
+      height: 60px;
       background: linear-gradient(135deg, #667eea, #764ba2);
-      border-radius: 8px;
+      border-radius: 15px;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-right: 15px;
       color: white;
-      font-size: 18px;
+      font-size: 24px;
+      margin: 0 auto 15px;
     }
 
-    .feature-text {
-      color: #333;
-      font-size: 14px;
+    .welcome-badge {
+      background: rgba(76, 175, 80, 0.1);
+      border: 2px solid #4caf50;
+      border-radius: 15px;
     }
 
-    .watson-chat-info {
-      text-align: center;
-      padding: 15px;
-      background: rgba(0, 0, 0, 0.05);
-      font-size: 12px;
-      color: #666;
+    .chat-widget-container {
+      height: calc(100vh - 200px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    #watson-chat-container {
+      width: 100%;
+      height: 100%;
+      border: none;
+      border-radius: 0 0 20px 20px;
+    }
+
+    .status-indicator {
+      width: 12px;
+      height: 12px;
+      background: #4caf50;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
     }
 
     @keyframes slideIn {
       from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(30px);
       }
       to {
         opacity: 1;
@@ -163,61 +135,132 @@
       }
     }
 
-    @media (max-width: 480px) {
-      .chatbot-container {
-        height: 100vh;
-        border-radius: 0;
-        max-width: 100%;
+    .slide-in {
+      animation: slideIn 0.6s ease-out;
+    }
+
+    @media (max-width: 768px) {
+      .main-container {
+        flex-direction: column;
       }
       
-      body {
-        padding: 0;
+      .welcome-section, .chatbot-section {
+        margin: 10px;
+      }
+      
+      .chat-widget-container {
+        height: 400px;
       }
     }
   </style>
 </head>
 <body>
-  <div class="chatbot-container">
-    <div class="chat-header">
-      <div class="bot-avatar">📚</div>
-      <div class="chat-title">Nikita</div>
-      <div class="chat-subtitle">Your Personal Book Recommendation Assistant</div>
-    </div>
+  <div class="container-fluid">
+    <div class="row main-container">
+      <!-- Welcome/Info Section -->
+      <div class="col-lg-6 d-flex align-items-center">
+        <div class="welcome-section p-4 w-100 slide-in">
+          <!-- Header -->
+          <div class="text-center mb-4">
+            <div class="bot-avatar mx-auto mb-3">📚</div>
+            <h1 class="display-4 fw-bold text-primary mb-2">Meet Nikita</h1>
+            <p class="lead text-muted">Your Personal Book Recommendation Assistant</p>
+          </div>
 
-    <div class="welcome-message">
-      <div class="welcome-text">
-        👋 Hi! I'm Nikita, your book recommendation chatbot. I'm here to help you discover amazing books based on your interests, mood, and reading preferences. Just click the chat icon to get started!
+          <!-- Welcome Message -->
+          <div class="welcome-badge p-4 mb-4">
+            <div class="d-flex align-items-center mb-3">
+              <div class="status-indicator me-2"></div>
+              <strong class="text-success">Online & Ready to Help</strong>
+            </div>
+            <p class="mb-0 text-success">
+              <i class="fas fa-hand-wave me-2"></i>
+              Hi! I'm Nikita, your book recommendation chatbot. I'm here to help you discover amazing books based on your interests, mood, and reading preferences. Start chatting with me on the right!
+            </p>
+          </div>
+
+          <!-- Features -->
+          <div class="row g-4">
+            <div class="col-md-6">
+              <div class="card feature-card p-4 text-center">
+                <div class="feature-icon">
+                  <i class="fas fa-bullseye"></i>
+                </div>
+                <h5 class="card-title">Personalized Picks</h5>
+                <p class="card-text small text-muted">Get book recommendations tailored to your unique taste and preferences</p>
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <div class="card feature-card p-4 text-center">
+                <div class="feature-icon">
+                  <i class="fas fa-search"></i>
+                </div>
+                <h5 class="card-title">Smart Discovery</h5>
+                <p class="card-text small text-muted">Find books by genre, author, topic, or even your current mood</p>
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <div class="card feature-card p-4 text-center">
+                <div class="feature-icon">
+                  <i class="fas fa-star"></i>
+                </div>
+                <h5 class="card-title">Bestsellers & Gems</h5>
+                <p class="card-text small text-muted">Discover popular hits and hidden literary treasures</p>
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <div class="card feature-card p-4 text-center">
+                <div class="feature-icon">
+                  <i class="fas fa-comments"></i>
+                </div>
+                <h5 class="card-title">Ask Anything</h5>
+                <p class="card-text small text-muted">Get answers about books, authors, reading lists, and more</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-center mt-4">
+            <p class="small text-muted">
+              <i class="fas fa-arrow-right me-2"></i>
+              Start your literary journey by chatting with Nikita →
+            </p>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <div class="chat-content">
-      <div class="features">
-        <div class="feature-item">
-          <div class="feature-icon">🎯</div>
-          <div class="feature-text">Personalized book recommendations based on your preferences</div>
-        </div>
-        
-        <div class="feature-item">
-          <div class="feature-icon">🔍</div>
-          <div class="feature-text">Discover books by genre, author, or specific topics</div>
-        </div>
-        
-        <div class="feature-item">
-          <div class="feature-icon">⭐</div>
-          <div class="feature-text">Get insights about bestsellers and hidden gems</div>
-        </div>
-        
-        <div class="feature-item">
-          <div class="feature-icon">💬</div>
-          <div class="feature-text">Ask me anything about books and reading!</div>
+      <!-- Chatbot Section -->
+      <div class="col-lg-6">
+        <div class="chatbot-section">
+          <div class="chat-header p-4">
+            <div class="d-flex align-items-center position-relative" style="z-index: 1;">
+              <div class="me-3">
+                <div style="width: 50px; height: 50px; background: rgba(255,255,255,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                  🤖
+                </div>
+              </div>
+              <div class="flex-grow-1">
+                <h4 class="mb-1">Chat with Nikita</h4>
+                <small class="opacity-75">
+                  <i class="fas fa-circle text-success me-1" style="font-size: 8px;"></i>
+                  Online - Ready to recommend books
+                </small>
+              </div>
+            </div>
+          </div>
+          
+          <div class="chat-widget-container">
+            <div id="watson-chat-container"></div>
+          </div>
         </div>
       </div>
-    </div>
-
-    <div class="watson-chat-info">
-      Watson Assistant will appear as a chat widget in the bottom-right corner
     </div>
   </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 
   <!-- Watson Assistant Chat Integration -->
   <script>
@@ -225,8 +268,29 @@
       integrationID: "a49faab6-2ca5-4d0b-ad21-066f57632dce",
       region: "au-syd",
       serviceInstanceID: "a87f2d76-6752-42b1-a9ab-fd0d71df8a55",
+      openChatByDefault: true,
+      showLauncher: false,
+      carbonTheme: 'white',
+      theme: {
+        primaryColor: '#4facfe'
+      },
       onLoad: async (instance) => { 
         await instance.render();
+        
+        // Try to embed the chat in our container
+        setTimeout(() => {
+          const chatFrame = document.querySelector('iframe[title*="Watson"]') || 
+                          document.querySelector('iframe[src*="watson"]') ||
+                          document.querySelector('.WACContainer iframe');
+          
+          if (chatFrame) {
+            const container = document.getElementById('watson-chat-container');
+            chatFrame.style.width = '100%';
+            chatFrame.style.height = '100%';
+            chatFrame.style.border = 'none';
+            container.appendChild(chatFrame);
+          }
+        }, 2000);
       }
     };
 
