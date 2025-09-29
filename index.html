@@ -2,122 +2,241 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Book Recommendation Chatbot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nikita - Book Recommendation Chatbot</title>
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background: #f7f7f7;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      margin: 0;
+      min-height: 100vh;
+      padding: 20px;
     }
-    .chat-container {
-      width: 400px;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+
+    .chatbot-container {
+      width: 100%;
+      max-width: 450px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
       display: flex;
       flex-direction: column;
-      overflow: hidden;
+      height: 600px;
     }
-    .chat-box {
-      flex: 1;
-      padding: 15px;
-      overflow-y: auto;
-    }
-    .chat-message {
-      margin: 8px 0;
-      padding: 10px;
-      border-radius: 8px;
-      max-width: 75%;
-    }
-    .user {
-      background: #007bff;
+
+    .chat-header {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      padding: 20px;
+      text-align: center;
       color: white;
-      align-self: flex-end;
+      position: relative;
     }
-    .bot {
-      background: #eee;
-      align-self: flex-start;
+
+    .chat-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="books" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><rect fill="none"/><path d="M2 2h16v16H2z" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23books)"/></svg>') repeat;
+      opacity: 0.3;
     }
-    .input-area {
+
+    .bot-avatar {
+      width: 60px;
+      height: 60px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      margin: 0 auto 15px;
       display: flex;
-      border-top: 1px solid #ddd;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      position: relative;
+      z-index: 1;
     }
-    .input-area input {
+
+    .chat-title {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 5px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .chat-subtitle {
+      font-size: 14px;
+      opacity: 0.9;
+      position: relative;
+      z-index: 1;
+    }
+
+    .welcome-message {
+      padding: 20px;
+      background: rgba(76, 175, 80, 0.1);
+      border-left: 4px solid #4caf50;
+      margin: 15px;
+      border-radius: 10px;
+      animation: slideIn 0.5s ease-out;
+    }
+
+    .welcome-text {
+      color: #2e7d32;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .chat-content {
       flex: 1;
-      padding: 10px;
-      border: none;
-      outline: none;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
     }
-    .input-area button {
-      padding: 10px 15px;
-      border: none;
-      background: #007bff;
+
+    .features {
+      display: grid;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      background: rgba(103, 126, 234, 0.1);
+      border-radius: 12px;
+      transition: transform 0.2s ease;
+    }
+
+    .feature-item:hover {
+      transform: translateY(-2px);
+    }
+
+    .feature-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
       color: white;
-      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .feature-text {
+      color: #333;
+      font-size: 14px;
+    }
+
+    .watson-chat-info {
+      text-align: center;
+      padding: 15px;
+      background: rgba(0, 0, 0, 0.05);
+      font-size: 12px;
+      color: #666;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .chatbot-container {
+        height: 100vh;
+        border-radius: 0;
+        max-width: 100%;
+      }
+      
+      body {
+        padding: 0;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="chat-container">
-    <div class="chat-box" id="chat-box"></div>
-    <div class="input-area">
-      <input type="text" id="user-input" placeholder="Type a message...">
-      <button onclick="sendMessage()">Send</button>
+  <div class="chatbot-container">
+    <div class="chat-header">
+      <div class="bot-avatar">📚</div>
+      <div class="chat-title">Nikita</div>
+      <div class="chat-subtitle">Your Personal Book Recommendation Assistant</div>
+    </div>
+
+    <div class="welcome-message">
+      <div class="welcome-text">
+        👋 Hi! I'm Nikita, your book recommendation chatbot. I'm here to help you discover amazing books based on your interests, mood, and reading preferences. Just click the chat icon to get started!
+      </div>
+    </div>
+
+    <div class="chat-content">
+      <div class="features">
+        <div class="feature-item">
+          <div class="feature-icon">🎯</div>
+          <div class="feature-text">Personalized book recommendations based on your preferences</div>
+        </div>
+        
+        <div class="feature-item">
+          <div class="feature-icon">🔍</div>
+          <div class="feature-text">Discover books by genre, author, or specific topics</div>
+        </div>
+        
+        <div class="feature-item">
+          <div class="feature-icon">⭐</div>
+          <div class="feature-text">Get insights about bestsellers and hidden gems</div>
+        </div>
+        
+        <div class="feature-item">
+          <div class="feature-icon">💬</div>
+          <div class="feature-text">Ask me anything about books and reading!</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="watson-chat-info">
+      Watson Assistant will appear as a chat widget in the bottom-right corner
     </div>
   </div>
 
+  <!-- Watson Assistant Chat Integration -->
   <script>
-    async function sendMessage() {
-      const input = document.getElementById("user-input");
-      const message = input.value.trim();
-      if (!message) return;
-
-      // Show user message
-      const chatBox = document.getElementById("chat-box");
-      chatBox.innerHTML += `<div class="chat-message user">${message}</div>`;
-      chatBox.scrollTop = chatBox.scrollHeight;
-
-      input.value = "";
-
-      try {
-        // Send message to backend Flask API
-        const response = await fetch("app.py", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ message })
-        });
-
-        const data = await response.json();
-        const reply = data.reply || "Sorry, I didn’t get that.";
-
-        // Show bot reply
-        chatBox.innerHTML += `<div class="chat-message bot">${reply}</div>`;
-        chatBox.scrollTop = chatBox.scrollHeight;
-      } catch (error) {
-        chatBox.innerHTML += `<div class="chat-message bot">⚠️ Error connecting to server</div>`;
+    window.watsonAssistantChatOptions = {
+      integrationID: "a49faab6-2ca5-4d0b-ad21-066f57632dce",
+      region: "au-syd",
+      serviceInstanceID: "a87f2d76-6752-42b1-a9ab-fd0d71df8a55",
+      onLoad: async (instance) => { 
+        await instance.render();
       }
-    }
+    };
+
+    setTimeout(function(){
+      const t = document.createElement('script');
+      t.src = "https://web-chat.global.assistant.watson.appdomain.cloud/versions/" + 
+              (window.watsonAssistantChatOptions.clientVersion || 'latest') + 
+              "/WatsonAssistantChatEntry.js";
+      document.head.appendChild(t);
+    });
   </script>
-  <script>
-  window.watsonAssistantChatOptions = {
-    integrationID: "a49faab6-2ca5-4d0b-ad21-066f57632dce", // The ID of this integration.
-    region: "au-syd", // The region your integration is hosted in.
-    serviceInstanceID: "a87f2d76-6752-42b1-a9ab-fd0d71df8a55", // The ID of your service instance.
-    onLoad: async (instance) => { await instance.render(); }
-  };
-  setTimeout(function(){
-    const t=document.createElement('script');
-    t.src="https://web-chat.global.assistant.watson.appdomain.cloud/versions/" + (window.watsonAssistantChatOptions.clientVersion || 'latest') + "/WatsonAssistantChatEntry.js";
-    document.head.appendChild(t);
-  });
-</script>
 </body>
 </html>
-
-
